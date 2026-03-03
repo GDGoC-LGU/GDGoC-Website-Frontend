@@ -1,198 +1,168 @@
-import { useEffect } from 'react';
-import { motion } from 'motion/react';
-import AOS from 'aos';
+import { useRef } from 'react';
+import { motion, useInView } from 'motion/react';
 import { FiCalendar, FiClock, FiMapPin, FiZap } from 'react-icons/fi';
 import { eventsData } from '../data/eventsData';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Events() {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      offset: 100
-    });
-  }, []);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="events" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Title */}
-        <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#202124] mb-4">
+    <section
+      id="events"
+      ref={ref}
+      style={{ padding: '100px 0', backgroundColor: 'var(--bg-primary)', transition: 'background-color 0.3s' }}
+    >
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          style={{ textAlign: 'center', marginBottom: 64 }}
+        >
+          <h2 style={{
+            fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800,
+            fontFamily: 'var(--font-display)', color: 'var(--text-primary)', marginBottom: 12,
+          }}>
             Upcoming{' '}
-            <span className="bg-gradient-to-r from-[#EA4335] via-[#FBBC05] to-[#34A853] bg-clip-text text-transparent">
+            <span style={{
+              background: 'linear-gradient(135deg, #EA4335, #FBBC05, #34A853)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
               Events
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p style={{ fontSize: 16, color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
             Join us for exciting workshops, hackathons, and tech talks
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#EA4335] to-[#34A853] mx-auto mt-4"></div>
-        </div>
+          <div style={{ width: 56, height: 3, background: 'linear-gradient(90deg, #EA4335, #34A853)', margin: '16px auto 0', borderRadius: 2 }} />
+        </motion.div>
 
-        {/* Events List */}
         {eventsData.length > 0 ? (
-          <div className="space-y-8">
-            {eventsData.map((event, index) => (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            {eventsData.map((event, i) => (
               <motion.div
                 key={event.id}
-                data-aos={index % 2 === 0 ? 'fade-right' : 'fade-left'}
-                className="group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-                whileHover={{ scale: 1.02 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.7, delay: i * 0.12 }}
+                whileHover={{ scale: 1.01, boxShadow: '0 20px 64px var(--shadow-lg)' }}
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 24, overflow: 'hidden',
+                  display: 'flex', flexWrap: 'wrap',
+                  flexDirection: i % 2 === 0 ? 'row' : 'row-reverse',
+                  transition: 'all 0.3s',
+                  position: 'relative',
+                }}
               >
-                <div className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-0`}>
-                  {/* Image */}
-                  <div className="md:w-2/5 relative overflow-hidden">
-                    <motion.img
-                      src={event.image}
-                      alt={event.title}
-                      className="w-full h-64 md:h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#4285F4]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Date Badge */}
-                    <motion.div
-                      className="absolute top-4 left-4 bg-white rounded-2xl shadow-lg overflow-hidden"
-                      whileHover={{ scale: 1.1 }}
-                      animate={{
-                        y: [0, -5, 0]
-                      }}
-                      transition={{
-                        y: {
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut'
-                        }
-                      }}
-                    >
-                      <div className="bg-gradient-to-r from-[#EA4335] to-[#FBBC05] text-white px-4 py-2 font-bold">
-                        <FiCalendar className="w-5 h-5 mx-auto" />
-                      </div>
-                      <div className="px-4 py-2 text-center">
-                        <div className="text-sm text-gray-600">
-                          {event.date.split(',')[0]}
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
+                {/* Top bar */}
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+                  background: 'linear-gradient(90deg, #4285F4, #EA4335, #FBBC05, #34A853)',
+                  zIndex: 2,
+                }} />
 
-                  {/* Content */}
-                  <div className="md:w-3/5 p-8 flex flex-col justify-center">
-                    <motion.h3
-                      className="text-2xl md:text-3xl font-bold text-[#202124] mb-4 group-hover:text-[#4285F4] transition-colors"
-                      whileHover={{ x: 5 }}
-                    >
-                      {event.title}
-                    </motion.h3>
-                    
-                    <p className="text-gray-700 mb-6 leading-relaxed">
-                      {event.description}
-                    </p>
-
-                    {/* Event Details */}
-                    <div className="grid md:grid-cols-2 gap-4 mb-6">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#4285F4]/10 rounded-full flex items-center justify-center">
-                          <FiMapPin className="w-5 h-5 text-[#4285F4]" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">Venue</div>
-                          <div className="font-semibold text-gray-800">{event.venue}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#EA4335]/10 rounded-full flex items-center justify-center">
-                          <FiCalendar className="w-5 h-5 text-[#EA4335]" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">Date</div>
-                          <div className="font-semibold text-gray-800">{event.date}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#FBBC05]/10 rounded-full flex items-center justify-center">
-                          <FiClock className="w-5 h-5 text-[#FBBC05]" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">Time</div>
-                          <div className="font-semibold text-gray-800">{event.time}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#34A853]/10 rounded-full flex items-center justify-center">
-                          <FiZap className="w-5 h-5 text-[#34A853]" />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500">Duration</div>
-                          <div className="font-semibold text-gray-800">{event.duration}</div>
-                        </div>
-                      </div>
+                {/* Image */}
+                <div style={{ flex: '0 0 min(40%, 300px)', position: 'relative', overflow: 'hidden', minHeight: 240, backgroundColor: 'var(--bg-tertiary)' }}>
+                  <motion.img
+                    src={event.image} alt={event.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{
+                      position: 'absolute', top: 16, left: 16,
+                      background: 'var(--bg-card)',
+                      borderRadius: 14, overflow: 'hidden',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <div style={{ background: 'linear-gradient(135deg, #EA4335, #FBBC05)', padding: '8px 14px', textAlign: 'center' }}>
+                      <FiCalendar color="#fff" size={16} style={{ margin: '0 auto' }} />
                     </div>
-
-                    {/* Register Button */}
-                    <motion.button
-                      className="self-start px-6 py-3 bg-gradient-to-r from-[#4285F4] to-[#34A853] text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span className="relative z-10">Register Now</span>
-                      
-                      {/* Button Glow */}
-                      <motion.div
-                        className="absolute inset-0 bg-white"
-                        initial={{ scale: 0, opacity: 0.5 }}
-                        whileHover={{ scale: 2, opacity: 0 }}
-                        transition={{ duration: 0.6 }}
-                      />
-                    </motion.button>
-                  </div>
+                    <div style={{ padding: '8px 14px', textAlign: 'center', fontSize: 12, color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
+                      {event.date?.split(',')[0]}
+                    </div>
+                  </motion.div>
                 </div>
 
-                {/* Border Glow Effect */}
-                <motion.div
-                  className="absolute inset-0 border-2 border-transparent group-hover:border-[#4285F4]/20 rounded-2xl pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                />
+                {/* Content */}
+                <div style={{ flex: '1 1 280px', padding: '32px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <h3 style={{
+                    fontSize: 'clamp(18px, 2.5vw, 26px)', fontWeight: 800,
+                    color: 'var(--text-primary)', marginBottom: 12,
+                    fontFamily: 'var(--font-display)',
+                  }}>
+                    {event.title}
+                  </h3>
+                  <p style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 24, fontFamily: 'var(--font-sans)' }}>
+                    {event.description}
+                  </p>
 
-                {/* Top Color Bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#4285F4] via-[#EA4335] via-[#FBBC05] to-[#34A853]" />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+                    {[
+                      { icon: FiMapPin, label: 'Venue', val: event.venue, color: '#4285F4' },
+                      { icon: FiCalendar, label: 'Date', val: event.date, color: '#EA4335' },
+                      { icon: FiClock, label: 'Time', val: event.time, color: '#FBBC05' },
+                      { icon: FiZap, label: 'Duration', val: event.duration, color: '#34A853' },
+                    ].map(({ icon: Icon, label, val, color }, j) => (
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{
+                          width: 36, height: 36, borderRadius: 10,
+                          backgroundColor: `${color}15`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          flexShrink: 0, color,
+                        }}>
+                          <Icon size={16} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-sans)' }}>{label}</div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}>{val}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(66,133,244,0.4)' }}
+                    whileTap={{ scale: 0.97 }}
+                    style={{
+                      alignSelf: 'flex-start',
+                      padding: '12px 28px',
+                      background: 'linear-gradient(135deg, #4285F4, #34A853)',
+                      color: '#fff', border: 'none', borderRadius: 100,
+                      fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                      fontFamily: 'var(--font-sans)',
+                    }}
+                  >
+                    Register Now
+                  </motion.button>
+                </div>
               </motion.div>
             ))}
           </div>
         ) : (
-          /* No Events Message */
           <motion.div
-            data-aos="zoom-in"
-            className="text-center py-20"
             initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            style={{ textAlign: 'center', padding: '80px 24px' }}
           >
             <motion.div
-              className="inline-block mb-6"
-              animate={{
-                rotate: [0, 10, -10, 10, 0],
-                scale: [1, 1.1, 1]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }}
+              animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+              style={{ fontSize: 72, marginBottom: 24 }}
             >
-              <FiCalendar className="w-24 h-24 text-[#4285F4] mx-auto" />
+              📅
             </motion.div>
-            <h3 className="text-3xl font-bold text-[#202124] mb-4">
-              Stay tuned! Exciting events are coming soon 🚀
+            <h3 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12, fontFamily: 'var(--font-display)' }}>
+              Stay tuned! Exciting events coming soon 🚀
             </h3>
-            <p className="text-xl text-gray-600">
+            <p style={{ fontSize: 16, color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
               We're planning amazing workshops and hackathons for you
             </p>
           </motion.div>

@@ -1,192 +1,218 @@
-import { Users, Rocket, BookOpen, Target } from "lucide-react";
-import { motion } from "motion/react";
-import { useInView } from "motion/react";
-import { useRef } from "react";
+import { useRef } from 'react';
+import { Users, Rocket, BookOpen, Target } from 'lucide-react';
+import { motion, useInView } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
 
 export function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const { isDark } = useTheme();
 
   const highlights = [
     {
-      icon: <Users size={28} />,
-      title: "Community Driven",
-      description: "Connect with passionate students and build lasting relationships",
-      color: "bg-blue-50",
-      iconColor: "text-[#4285F4]",
-      gradient: "from-blue-400 to-blue-600",
+      icon: <Users size={24} />,
+      title: 'Community Driven',
+      description: 'Connect with passionate students and build lasting relationships',
+      color: '#4285F4',
+      bg: isDark ? 'rgba(66,133,244,0.1)' : 'rgba(66,133,244,0.07)',
     },
     {
-      icon: <Rocket size={28} />,
-      title: "Build & Ship",
-      description: "Create real-world projects with cutting-edge Google technologies",
-      color: "bg-red-50",
-      iconColor: "text-[#EA4335]",
-      gradient: "from-red-400 to-red-600",
+      icon: <Rocket size={24} />,
+      title: 'Build & Ship',
+      description: 'Create real-world projects with cutting-edge Google technologies',
+      color: '#EA4335',
+      bg: isDark ? 'rgba(234,67,53,0.1)' : 'rgba(234,67,53,0.07)',
     },
     {
-      icon: <BookOpen size={28} />,
-      title: "Learn & Grow",
-      description: "Access expert-led workshops and hands-on training sessions",
-      color: "bg-yellow-50",
-      iconColor: "text-[#FBBC04]",
-      gradient: "from-yellow-400 to-yellow-600",
+      icon: <BookOpen size={24} />,
+      title: 'Learn & Grow',
+      description: 'Access expert-led workshops and hands-on training sessions',
+      color: '#FBBC05',
+      bg: isDark ? 'rgba(251,188,5,0.1)' : 'rgba(251,188,5,0.07)',
     },
     {
-      icon: <Target size={28} />,
-      title: "Make Impact",
-      description: "Solve real problems and contribute to meaningful solutions",
-      color: "bg-green-50",
-      iconColor: "text-[#34A853]",
-      gradient: "from-green-400 to-green-600",
+      icon: <Target size={24} />,
+      title: 'Make Impact',
+      description: 'Solve real problems and contribute to meaningful solutions',
+      color: '#34A853',
+      bg: isDark ? 'rgba(52,168,83,0.1)' : 'rgba(52,168,83,0.07)',
     },
   ];
 
   return (
-    <section id="about" ref={ref} className="py-32 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-        {/* Section Header */}
+    <section
+      id="about"
+      ref={ref}
+      style={{ padding: '100px 0', backgroundColor: 'var(--bg-primary)', transition: 'background-color 0.3s' }}
+    >
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.7 }}
+          style={{ textAlign: 'center', marginBottom: 72 }}
         >
-          <motion.h2 
-            className="text-4xl md:text-5xl text-gray-900 mb-6 font-bold"
-            whileInView={{ 
-              backgroundPosition: ["0%", "100%"],
-            }}
-            transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-          >
-            About <span className="bg-gradient-to-r from-[#FBBC05] via-[#EA4335] to-[#4285F4] bg-clip-text text-transparent">
-              GDCoC
-            </span>
-          </motion.h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Google Developer Circles on Campus brings together students passionate about technology,
-            innovation, and creating meaningful impact through collaboration.
+          <h2 style={{
+            fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800,
+            fontFamily: 'var(--font-display)', color: 'var(--text-primary)',
+            marginBottom: 16,
+          }}>
+            About{' '}
+            <span style={{
+              background: 'linear-gradient(135deg, #FBBC05, #EA4335, #4285F4)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}>GDGoC</span>
+          </h2>
+          <p style={{
+            fontSize: 18, color: 'var(--text-secondary)', maxWidth: 560,
+            margin: '0 auto', lineHeight: 1.7, fontFamily: 'var(--font-sans)',
+          }}>
+            Google Developer Groups on Campus brings together students passionate about
+            technology, innovation, and creating meaningful impact through collaboration.
           </p>
+          <div style={{ width: 56, height: 3, background: 'linear-gradient(90deg, #FBBC05, #EA4335, #4285F4)', margin: '20px auto 0', borderRadius: 2 }} />
         </motion.div>
 
-        {/* Highlights Grid with enhanced animations */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-          {highlights.map((item, index) => (
+        {/* Highlights */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 20, marginBottom: 80,
+        }}>
+          {highlights.map((item, i) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ 
-                y: -12, 
-                transition: { duration: 0.3 },
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              whileHover={{ y: -8, boxShadow: `0 20px 48px ${item.color}20` }}
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 20,
+                padding: '28px 24px',
+                transition: 'box-shadow 0.3s, transform 0.3s, border-color 0.3s',
+                cursor: 'default',
+                position: 'relative',
+                overflow: 'hidden',
               }}
-              className="relative bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden group"
             >
-              {/* Animated gradient overlay on hover */}
+              {/* Corner accent */}
+              <div style={{
+                position: 'absolute', top: 0, right: 0,
+                width: 60, height: 60,
+                background: `radial-gradient(circle at top right, ${item.color}15, transparent)`,
+              }} />
               <motion.div
-                className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
-              />
-              
-              {/* Shine effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.8 }}
-              />
-
-              <div className="relative z-10">
-                <motion.div 
-                  className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center mb-6 ${item.iconColor}`}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  {item.icon}
-                </motion.div>
-                <h3 className="text-xl text-gray-900 mb-3 font-semibold">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
+                whileHover={{ rotate: 12, scale: 1.1 }}
+                style={{
+                  width: 48, height: 48, borderRadius: 14,
+                  backgroundColor: item.bg,
+                  color: item.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                {item.icon}
+              </motion.div>
+              <h3 style={{
+                fontSize: 17, fontWeight: 700, color: 'var(--text-primary)',
+                marginBottom: 8, fontFamily: 'var(--font-sans)',
+              }}>
+                {item.title}
+              </h3>
+              <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, fontFamily: 'var(--font-sans)' }}>
+                {item.description}
+              </p>
             </motion.div>
           ))}
         </div>
 
-        {/* Mission & Vision with glassmorphism */}
+        {/* Mission & Vision */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid lg:grid-cols-2 gap-12 items-center"
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40, alignItems: 'center' }}
         >
-          {/* Left - Text */}
-          <div className="space-y-8">
-            <motion.div
-              whileHover={{ x: 10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="text-3xl text-gray-900 mb-4 font-bold">Our Mission</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                To empower students with knowledge, tools, and community support needed to build
-                innovative solutions using Google technologies. We foster a culture of continuous
-                learning and collaboration.
-              </p>
-            </motion.div>
-            <motion.div
-              whileHover={{ x: 10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="text-3xl text-gray-900 mb-4 font-bold">Our Vision</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Creating a vibrant ecosystem where students can explore, experiment, and excel
-                in technology. We envision a future where every member becomes a skilled developer
-                and change-maker.
-              </p>
-            </motion.div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+            {[
+              {
+                title: 'Our Mission',
+                text: 'To empower students with knowledge, tools, and community support needed to build innovative solutions using Google technologies. We foster a culture of continuous learning and collaboration.',
+                color: '#4285F4',
+              },
+              {
+                title: 'Our Vision',
+                text: 'Creating a vibrant ecosystem where students can explore, experiment, and excel in technology. We envision a future where every member becomes a skilled developer and change-maker.',
+                color: '#34A853',
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ x: 6 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                  <div style={{ width: 4, height: 28, borderRadius: 2, backgroundColor: item.color }} />
+                  <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                    {item.title}
+                  </h3>
+                </div>
+                <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, fontFamily: 'var(--font-sans)', paddingLeft: 16 }}>
+                  {item.text}
+                </p>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Right - Card with glassmorphism */}
+          {/* Activity cards */}
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-            className="relative bg-white/60 backdrop-blur-xl rounded-3xl p-10 shadow-xl border border-gray-100 overflow-hidden"
+            whileHover={{ scale: 1.01 }}
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 24, padding: 32,
+              boxShadow: '0 8px 32px var(--shadow-color)',
+            }}
           >
-            {/* Animated gradient background */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-br from-blue-50 via-transparent to-green-50"
-              animate={{ 
-                backgroundPosition: ["0% 0%", "100% 100%"],
-              }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-            />
-
-            <div className="relative z-10 space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {[
-                { emoji: "🎯", title: "Weekly Workshops", desc: "Interactive learning sessions every week", color: "blue" },
-                { emoji: "🚀", title: "Hackathons", desc: "Build amazing projects in competitive events", color: "red" },
-                { emoji: "🤝", title: "Networking", desc: "Connect with industry professionals", color: "green" },
-              ].map((item, idx) => (
+                { emoji: '🎯', title: 'Weekly Workshops', desc: 'Interactive learning sessions every week', color: '#4285F4' },
+                { emoji: '🚀', title: 'Hackathons', desc: 'Build amazing projects in competitive events', color: '#EA4335' },
+                { emoji: '🤝', title: 'Networking', desc: 'Connect with industry professionals', color: '#34A853' },
+              ].map((item, i) => (
                 <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
+                  key={i}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.6 + idx * 0.1 }}
-                  whileHover={{ x: 10, scale: 1.02 }}
-                  className="flex items-start gap-4 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm hover:shadow-md transition-all duration-300"
+                  transition={{ delay: 0.6 + i * 0.1 }}
+                  whileHover={{ x: 6, scale: 1.01 }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 16,
+                    padding: '16px 20px',
+                    background: 'var(--bg-secondary)',
+                    borderRadius: 14, border: '1px solid var(--border-color)',
+                    transition: 'all 0.2s',
+                  }}
                 >
-                  <motion.div 
-                    className={`w-12 h-12 bg-${item.color}-100 rounded-xl flex items-center justify-center flex-shrink-0`}
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <span className="text-2xl">{item.emoji}</span>
-                  </motion.div>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    backgroundColor: `${item.color}15`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 22, flexShrink: 0,
+                  }}>
+                    {item.emoji}
+                  </div>
                   <div>
-                    <div className="text-xl text-gray-900 mb-2 font-semibold">{item.title}</div>
-                    <div className="text-gray-600">{item.desc}</div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}>
+                      {item.title}
+                    </div>
+                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
+                      {item.desc}
+                    </div>
                   </div>
                 </motion.div>
               ))}

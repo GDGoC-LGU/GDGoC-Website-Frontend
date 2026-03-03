@@ -1,138 +1,301 @@
-import React from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FiArrowRight, FiCalendar } from 'react-icons/fi';
 import {
   SiReact, SiFirebase, SiFlutter, SiGooglecloud,
   SiPython, SiNodedotjs, SiAndroid, SiTensorflow,
-  SiGoogle, SiGooglesearchconsole, SiDart, SiKotlin
+  SiGoogle, SiDart, SiKotlin
 } from 'react-icons/si';
 
-const FloatingIcon = ({ icon: Icon, color, x, y, delay, mobileHidden = false }) => (
+const FloatingIcon = ({ icon: Icon, color, x, y, delay, duration = 5, mobileHidden = false }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.5 }}
-    animate={{
-      opacity: [0.3, 0.6, 0.3],
-      y: [0, -25, 0],
-      x: [0, 15, 0],
-      scale: [1, 1.1, 1]
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.8, delay, ease: 'easeOut' }}
+    style={{
+      position: 'absolute',
+      left: x, top: y,
+      display: 'block',
+      zIndex: 1,
     }}
-    transition={{
-      duration: 6 + Math.random() * 2,
-      repeat: Infinity,
-      delay,
-      ease: "easeInOut"
-    }}
-    className={`absolute ${mobileHidden ? 'hidden lg:block' : 'block'}`}
-    style={{ left: x, top: y }}
+    className={mobileHidden ? 'hero-icon-desktop' : ''}
   >
-    <div className="relative group p-2">
-      <div
-        className="absolute inset-0 blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-500 rounded-full"
-        style={{ backgroundColor: color }}
-      />
-      <Icon className="relative z-10 text-2xl md:text-4xl lg:text-5xl" style={{ color }} />
-    </div>
+    {/* Floating wrapper — separate from the entrance animation */}
+    <motion.div
+      animate={{ y: [0, -18, 0], x: [0, 8, 0] }}
+      transition={{
+        y: { duration, repeat: Infinity, ease: 'easeInOut', delay },
+        x: { duration: duration * 1.4, repeat: Infinity, ease: 'easeInOut', delay: delay + 0.5 },
+      }}
+    >
+      <div style={{ position: 'relative', padding: 10 }}>
+        {/* Glow behind icon */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundColor: color,
+          borderRadius: '50%',
+          filter: 'blur(14px)',
+          opacity: 0.35,
+        }} />
+        <Icon style={{ color, fontSize: 38, position: 'relative', zIndex: 1, display: 'block' }} />
+      </div>
+    </motion.div>
   </motion.div>
 );
 
 export default function Hero() {
-  // Parallax scroll effect for the main container
   const { scrollY } = useScroll();
-  const yParallax = useTransform(scrollY, [0, 500], [0, -100]);
+  const yParallax = useTransform(scrollY, [0, 500], [0, -80]);
+  const opacityParallax = useTransform(scrollY, [0, 400], [1, 0]);
 
   const techStack = [
-    // Primary Google Ecosystem
-    { icon: SiGoogle, color: '#4285F4', x: '10%', y: '15%', delay: 0 },
-    { icon: SiFlutter, color: '#02569B', x: '85%', y: '20%', delay: 1 },
-    { icon: SiFirebase, color: '#FFCA28', x: '12%', y: '70%', delay: 2 },
-    { icon: SiAndroid, color: '#3DDC84', x: '80%', y: '75%', delay: 1.5 },
-    { icon: SiGooglecloud, color: '#4285F4', x: '75%', y: '45%', delay: 0.5 },
-
-    // Frameworks & Languages (Hidden on mobile for clarity)
-    { icon: SiReact, color: '#61DAFB', x: '25%', y: '10%', delay: 3, mobileHidden: true },
-    { icon: SiTensorflow, color: '#FF6F00', x: '15%', y: '45%', delay: 2.5, mobileHidden: true },
-    { icon: SiPython, color: '#3776AB', x: '20%', y: '85%', delay: 4, mobileHidden: true },
-    { icon: SiKotlin, color: '#7F52FF', x: '88%', y: '10%', delay: 1.2, mobileHidden: true },
-    { icon: SiDart, color: '#0175C2', x: '90%', y: '60%', delay: 0.8, mobileHidden: true },
-    { icon: SiNodedotjs, color: '#339933', x: '70%', y: '88%', delay: 3.5, mobileHidden: true },
+    { icon: SiGoogle,      color: '#4285F4', x: '8%',  y: '18%', delay: 0,   duration: 5.0 },
+    { icon: SiFlutter,     color: '#54C5F8', x: '84%', y: '22%', delay: 0.8, duration: 6.2 },
+    { icon: SiFirebase,    color: '#FFCA28', x: '10%', y: '68%', delay: 1.6, duration: 4.8 },
+    { icon: SiAndroid,     color: '#3DDC84', x: '80%', y: '72%', delay: 1.2, duration: 5.6 },
+    { icon: SiGooglecloud, color: '#4285F4', x: '74%', y: '44%', delay: 0.4, duration: 7.0 },
+    { icon: SiReact,       color: '#61DAFB', x: '24%', y: '12%', delay: 2.4, duration: 5.4, mobileHidden: true },
+    { icon: SiTensorflow,  color: '#FF6F00', x: '14%', y: '44%', delay: 2.0, duration: 6.8, mobileHidden: true },
+    { icon: SiPython,      color: '#3776AB', x: '18%', y: '82%', delay: 3.2, duration: 4.5, mobileHidden: true },
+    { icon: SiKotlin,      color: '#7F52FF', x: '87%', y: '12%', delay: 1.0, duration: 5.9, mobileHidden: true },
+    { icon: SiDart,        color: '#0175C2', x: '89%', y: '58%', delay: 0.6, duration: 6.5, mobileHidden: true },
+    { icon: SiNodedotjs,   color: '#339933', x: '68%', y: '86%', delay: 2.8, duration: 5.2, mobileHidden: true },
   ];
 
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center bg-[#0a0a0a] overflow-hidden text-white selection:bg-blue-500/30">
-
-      {/* Dynamic Background Blurs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-red-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+    <section
+      id="home"
+      style={{
+        position: 'relative', minHeight: '100vh', width: '100%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: '#080810', overflow: 'hidden', color: '#ffffff',
+      }}
+    >
+      {/* Multi-layer background */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {/* Mesh gradient blobs */}
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', top: '-15%', left: '-15%',
+            width: '55%', height: '55%',
+            background: 'radial-gradient(circle, #4285F4 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+          style={{
+            position: 'absolute', bottom: '-15%', right: '-15%',
+            width: '50%', height: '50%',
+            background: 'radial-gradient(circle, #EA4335 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.08, 1], opacity: [0.08, 0.15, 0.08] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 6 }}
+          style={{
+            position: 'absolute', top: '30%', right: '20%',
+            width: '35%', height: '35%',
+            background: 'radial-gradient(circle, #FBBC05 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        {/* Grid overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
+        }} />
       </div>
 
-      {/* Floating Elements Loop */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {techStack.map((tech, index) => (
-          <FloatingIcon key={index} {...tech} />
-        ))}
+      {/* Floating icons */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+        {techStack.map((tech, i) => <FloatingIcon key={i} {...tech} />)}
       </div>
 
-      {/* Main Content Area */}
+      {/* Main content */}
       <motion.div
-        style={{ y: yParallax }}
-        className="relative z-20 max-w-6xl px-4 sm:px-6 lg:px-8 text-center"
+        style={{ y: yParallax, opacity: opacityParallax, position: 'relative', zIndex: 20 }}
+        className="hero-content"
       >
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ textAlign: 'center', maxWidth: 900, padding: '0 24px' }}
         >
           {/* Badge */}
-          <div className="flex justify-center mb-8 mt-15">
-            <span className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold tracking-widest uppercase border border-white/10 rounded-full bg-white/5 backdrop-blur-xl shadow-2xl">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            style={{ display: 'flex', justifyContent: 'center', marginBottom: 32, marginTop: 80 }}
+          >
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '8px 20px',
+              fontSize: 12, fontWeight: 600, letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 100,
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(12px)',
+              fontFamily: 'var(--font-sans)',
+              color: 'rgba(255,255,255,0.8)',
+            }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%',
+                backgroundColor: '#34A853',
+                boxShadow: '0 0 8px #34A853',
+                animation: 'pulse 2s infinite',
+              }} />
               Empowering Campus Innovators
             </span>
-          </div>
+          </motion.div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 leading-[1.1] tracking-tight">
-            Google Developer Groups <br />
-            <span className="bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC05] bg-clip-text text-transparent">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontSize: 'clamp(36px, 7vw, 88px)',
+              fontWeight: 900,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              fontFamily: 'var(--font-display)',
+              marginBottom: 28,
+            }}
+          >
+            Google Developer Groups
+            <br />
+            <span style={{
+              background: 'linear-gradient(135deg, #4285F4 0%, #EA4335 40%, #FBBC05 70%, #34A853 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}>
               on Campus
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Subtext */}
-          <p className="text-base md:text-xl lg:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            style={{
+              fontSize: 'clamp(16px, 2vw, 20px)',
+              color: 'rgba(255,255,255,0.55)',
+              maxWidth: 600, margin: '0 auto 48px',
+              lineHeight: 1.7,
+              fontFamily: 'var(--font-sans)',
+            }}
+          >
             Join the world's most vibrant student developer community.
             Build with Google technologies and connect with industry experts.
-          </p>
+          </motion.p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-            <button className="w-full sm:w-auto group relative flex items-center justify-center gap-3 px-10 py-5 bg-[#4285F4] hover:bg-[#3367d6] text-white rounded-2xl font-bold transition-all shadow-[0_0_30px_-5px_rgba(66,133,244,0.5)] active:scale-95">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
+            style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}
+          >
+            <motion.button
+              whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(66,133,244,0.5)' }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '16px 32px',
+                background: '#4285F4',
+                color: '#ffffff',
+                borderRadius: 14,
+                border: 'none',
+                fontSize: 16, fontWeight: 700,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-sans)',
+                transition: 'box-shadow 0.3s',
+              }}
+            >
               Join Community
-              <FiArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
-            </button>
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <FiArrowRight />
+              </motion.span>
+            </motion.button>
 
-            <button className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-xl text-white rounded-2xl font-bold transition-all active:scale-95">
-              <FiCalendar className="text-xl" />
+            <motion.button
+              whileHover={{ scale: 1.04, backgroundColor: 'rgba(255,255,255,0.12)' }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '16px 32px',
+                background: 'rgba(255,255,255,0.07)',
+                color: '#ffffff',
+                borderRadius: 14,
+                border: '1px solid rgba(255,255,255,0.12)',
+                fontSize: 16, fontWeight: 600,
+                cursor: 'pointer',
+                backdropFilter: 'blur(12px)',
+                fontFamily: 'var(--font-sans)',
+                transition: 'background 0.3s',
+              }}
+            >
+              <FiCalendar />
               Explore Events
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Bottom Subtle Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10" />
+      {/* Bottom fade */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        height: 120,
+        background: 'linear-gradient(to top, #080810, transparent)',
+        zIndex: 10,
+      }} />
 
-      {/* Responsive Scroll Hint */}
+      {/* Scroll hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-3"
+        transition={{ delay: 2.5 }}
+        style={{
+          position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, zIndex: 20,
+        }}
       >
-        <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Scroll to explore</p>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-gray-500 to-transparent" />
+        <p style={{ fontSize: 10, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', fontFamily: 'var(--font-sans)' }}>
+          Scroll
+        </p>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)' }}
+        />
       </motion.div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        @media (max-width: 768px) {
+          .hero-icon-desktop { display: none !important; }
+        }
+      `}</style>
     </section>
   );
 }

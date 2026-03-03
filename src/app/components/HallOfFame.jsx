@@ -1,128 +1,118 @@
-import { useEffect } from 'react';
-import { motion } from 'motion/react';
-import AOS from 'aos';
+import { useRef } from 'react';
+import { motion, useInView } from 'motion/react';
 import { FiAward, FiTrendingUp } from 'react-icons/fi';
 import { memberOfTheMonth, hallOfFameMembers } from '../data/hallOfFameData';
+import { useTheme } from '../context/ThemeContext';
 
 export default function HallOfFame() {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      offset: 100
-    });
-  }, []);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const { isDark } = useTheme();
 
   return (
-    <section id="hall-of-fame" className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Title */}
-        <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#202124] mb-4">
+    <section
+      id="hall-of-fame"
+      ref={ref}
+      style={{ padding: '100px 0', backgroundColor: 'var(--bg-secondary)', transition: 'background-color 0.3s' }}
+    >
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          style={{ textAlign: 'center', marginBottom: 64 }}
+        >
+          <h2 style={{
+            fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800,
+            fontFamily: 'var(--font-display)', color: 'var(--text-primary)', marginBottom: 12,
+          }}>
             Hall of{' '}
-            <span className="bg-gradient-to-r from-[#FBBC05] via-[#EA4335] to-[#4285F4] bg-clip-text text-transparent">
+            <span style={{
+              background: 'linear-gradient(135deg, #FBBC05, #EA4335, #4285F4)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
               Fame
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p style={{ fontSize: 16, color: 'var(--text-secondary)', maxWidth: 440, margin: '0 auto 16px', fontFamily: 'var(--font-sans)' }}>
             Celebrating our most outstanding members and their incredible contributions
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#FBBC05] to-[#EA4335] mx-auto mt-4"></div>
-        </div>
+          <div style={{ width: 56, height: 3, background: 'linear-gradient(90deg, #FBBC05, #EA4335)', margin: '0 auto', borderRadius: 2 }} />
+        </motion.div>
 
-        {/* Member of the Month - Featured Card */}
+        {/* Member of Month - Featured */}
         <motion.div
-          data-aos="zoom-in"
-          className="relative mb-16 max-w-4xl mx-auto"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.7 }}
+          style={{ maxWidth: 800, margin: '0 auto 72px', position: 'relative' }}
         >
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl">
-            {/* Glowing Border */}
-            <motion.div
-              className="absolute inset-0 rounded-3xl"
-              style={{
-                background: 'linear-gradient(135deg, #FBBC05, #EA4335, #4285F4, #34A853)',
-                padding: '3px'
-              }}
-              animate={{
-                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: 'linear'
-              }}
-            >
-              <div className="w-full h-full bg-white rounded-3xl" />
-            </motion.div>
-
-            <div className="relative z-10 bg-white rounded-3xl p-8 md:p-12">
+          {/* Gradient border wrapper */}
+          <div style={{
+            background: 'linear-gradient(135deg, #FBBC05, #EA4335, #4285F4, #34A853)',
+            borderRadius: 26, padding: 2,
+          }}>
+            <div style={{
+              background: 'var(--bg-card)',
+              borderRadius: 24, padding: '40px 40px',
+            }}>
               {/* Badge */}
-              <div className="flex items-center justify-center mb-6">
-                <motion.div
-                  className="bg-gradient-to-r from-[#FBBC05] to-[#EA4335] text-white px-6 py-2 rounded-full font-semibold flex items-center space-x-2"
-                  animate={{
-                    boxShadow: [
-                      '0 0 20px rgba(251,188,5,0.3)',
-                      '0 0 40px rgba(251,188,5,0.5)',
-                      '0 0 20px rgba(251,188,5,0.3)'
-                    ]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
+                <motion.span
+                  animate={{ boxShadow: ['0 0 20px rgba(251,188,5,0.2)', '0 0 40px rgba(251,188,5,0.4)', '0 0 20px rgba(251,188,5,0.2)'] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '8px 20px', borderRadius: 100,
+                    background: 'linear-gradient(135deg, #FBBC05, #EA4335)',
+                    color: '#ffffff', fontSize: 13, fontWeight: 700,
+                    fontFamily: 'var(--font-sans)',
                   }}
                 >
-                  <FiAward className="w-5 h-5" />
-                  <span>Member of the Month - {memberOfTheMonth.month}</span>
-                </motion.div>
+                  <FiAward size={15} />
+                  Member of the Month — {memberOfTheMonth.month}
+                </motion.span>
               </div>
 
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center', justifyContent: 'center' }}>
                 {/* Photo */}
                 <motion.div
-                  className="relative"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ scale: 1.04 }}
+                  style={{ position: 'relative', flexShrink: 0 }}
                 >
-                  <div className="w-48 h-48 rounded-full overflow-hidden ring-4 ring-[#FBBC05] shadow-xl">
-                    <img
-                      src={memberOfTheMonth.photo}
-                      alt={memberOfTheMonth.name}
-                      className="w-full h-full object-cover"
-                    />
+                  <div style={{
+                    width: 152, height: 152, borderRadius: '50%', overflow: 'hidden',
+                    border: '4px solid #FBBC05',
+                    boxShadow: '0 0 32px rgba(251,188,5,0.3)',
+                  }}>
+                    <img src={memberOfTheMonth.photo} alt={memberOfTheMonth.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                  
-                  {/* Floating Trophy */}
                   <motion.div
-                    className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-[#FBBC05] to-[#EA4335] rounded-full flex items-center justify-center shadow-lg"
-                    animate={{
-                      y: [0, -10, 0],
-                      rotate: [0, 5, -5, 0]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'easeInOut'
+                    animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    style={{
+                      position: 'absolute', top: -6, right: -6,
+                      width: 44, height: 44, borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #FBBC05, #EA4335)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      boxShadow: '0 4px 16px rgba(251,188,5,0.4)',
                     }}
                   >
-                    <FiTrendingUp className="w-8 h-8 text-white" />
+                    <FiTrendingUp size={20} color="#fff" />
                   </motion.div>
                 </motion.div>
 
-                {/* Content */}
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl md:text-4xl font-bold text-[#202124] mb-2">
+                <div style={{ flex: 1, minWidth: 220 }}>
+                  <h3 style={{
+                    fontSize: 28, fontWeight: 800, color: 'var(--text-primary)',
+                    marginBottom: 6, fontFamily: 'var(--font-display)',
+                  }}>
                     {memberOfTheMonth.name}
                   </h3>
-                  <p className="text-xl text-[#EA4335] font-semibold mb-4">
+                  <p style={{ fontSize: 15, fontWeight: 600, color: '#EA4335', marginBottom: 12, fontFamily: 'var(--font-sans)' }}>
                     {memberOfTheMonth.achievement}
                   </p>
-                  <p className="text-gray-700 leading-relaxed text-lg">
+                  <p style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-sans)' }}>
                     {memberOfTheMonth.description}
                   </p>
                 </div>
@@ -131,90 +121,78 @@ export default function HallOfFame() {
           </div>
         </motion.div>
 
-        {/* Hall of Fame Grid */}
-        <div className="mb-8" data-aos="fade-up">
-          <h3 className="text-3xl font-bold text-center text-[#202124] mb-12">
-            Our Legends
-          </h3>
-        </div>
+        {/* Legends title */}
+        <motion.h3
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.3 }}
+          style={{
+            fontSize: 28, fontWeight: 800, textAlign: 'center',
+            color: 'var(--text-primary)', marginBottom: 40,
+            fontFamily: 'var(--font-display)',
+          }}
+        >
+          Our Legends
+        </motion.h3>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {hallOfFameMembers.map((member, index) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
+          {hallOfFameMembers.map((member, i) => (
             <motion.div
               key={member.id}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
-              className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-              whileHover={{ y: -10, scale: 1.02 }}
+              initial={{ opacity: 0, y: 24 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+              whileHover={{ y: -8, boxShadow: '0 20px 48px rgba(251,188,5,0.15)' }}
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 20, overflow: 'hidden',
+                transition: 'all 0.3s', position: 'relative',
+              }}
             >
-              {/* Shine Sweep Animation */}
-              <motion.div
-                className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 pointer-events-none"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '100%' }}
-                transition={{ duration: 0.8 }}
-              />
-
-              {/* Photo */}
-              <div className="relative h-64 bg-gray-200 overflow-hidden">
+              <div style={{ position: 'relative', height: 220, overflow: 'hidden', backgroundColor: 'var(--bg-tertiary)' }}>
                 <motion.img
-                  src={member.photo}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
+                  src={member.photo} alt={member.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  whileHover={{ scale: 1.08 }}
                   transition={{ duration: 0.5 }}
                 />
-
-                {/* Year Badge */}
-                <motion.div
-                  className="absolute top-4 right-4 bg-gradient-to-r from-[#4285F4] to-[#34A853] text-white px-4 py-2 rounded-full font-bold shadow-lg"
-                  whileHover={{ scale: 1.1 }}
-                  animate={{
-                    boxShadow: [
-                      '0 0 15px rgba(66,133,244,0.3)',
-                      '0 0 25px rgba(66,133,244,0.5)',
-                      '0 0 15px rgba(66,133,244,0.3)'
-                    ]
-                  }}
-                  transition={{
-                    boxShadow: {
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut'
-                    }
-                  }}
-                >
+                <div style={{
+                  position: 'absolute', top: 12, right: 12,
+                  padding: '6px 14px', borderRadius: 100,
+                  background: 'linear-gradient(135deg, #4285F4, #34A853)',
+                  color: '#fff', fontSize: 13, fontWeight: 700,
+                  fontFamily: 'var(--font-sans)',
+                }}>
                   {member.year}
-                </motion.div>
-
-                {/* Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#4285F4]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
               </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h4 className="text-xl font-bold text-[#202124] mb-2 group-hover:text-[#4285F4] transition-colors">
+              <div style={{ padding: '20px 20px 24px', position: 'relative' }}>
+                <h4 style={{
+                  fontSize: 17, fontWeight: 700, color: 'var(--text-primary)',
+                  marginBottom: 6, fontFamily: 'var(--font-sans)',
+                }}>
                   {member.name}
                 </h4>
-                <p className="text-gray-700 leading-relaxed">
+                <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, fontFamily: 'var(--font-sans)' }}>
                   {member.achievement}
                 </p>
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={isInView ? { scale: 1, rotate: 0 } : {}}
+                  transition={{ delay: 0.3 + i * 0.1, type: 'spring' }}
+                  whileHover={{ rotate: 360 }}
+                  style={{
+                    position: 'absolute', bottom: 20, right: 20,
+                    width: 40, height: 40, borderRadius: '50%',
+                    background: '#FBBC05',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 4px 16px rgba(251,188,5,0.4)',
+                  }}
+                >
+                  <FiAward size={18} color="#fff" />
+                </motion.div>
               </div>
-
-              {/* Trophy Icon Badge */}
-              <motion.div
-                className="absolute bottom-6 right-6 w-12 h-12 bg-[#FBBC05] rounded-full flex items-center justify-center shadow-lg"
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5, type: 'spring' }}
-                whileHover={{ rotate: 360 }}
-              >
-                <FiAward className="w-6 h-6 text-white" />
-              </motion.div>
-
-              {/* Border Glow on Hover */}
-              <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#FBBC05]/30 rounded-2xl transition-all duration-300 pointer-events-none" />
             </motion.div>
           ))}
         </div>
