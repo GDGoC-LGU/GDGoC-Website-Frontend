@@ -1,12 +1,10 @@
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { FiTarget, FiEye, FiHeart, FiTrendingUp } from 'react-icons/fi';
-import { useTheme } from '../context/ThemeContext';
 
 export default function HighlightCards() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-80px' });
-  const { isDark } = useTheme();
 
   const cards = [
     {

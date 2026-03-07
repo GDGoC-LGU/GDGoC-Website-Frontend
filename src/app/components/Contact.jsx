@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { FiLinkedin, FiMessageCircle, FiInstagram, FiUsers, FiMail, FiMessageSquare } from 'react-icons/fi';
-import { useTheme } from '../context/ThemeContext';
 
 export default function Contact() {
   const ref = useRef(null);

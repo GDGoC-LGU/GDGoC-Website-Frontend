@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { FiCalendar, FiClock, FiMapPin, FiZap } from 'react-icons/fi';
 import { eventsData } from '../data/eventsData';
-import { useTheme } from '../context/ThemeContext';
 
 export default function Events() {
   const ref = useRef(null);

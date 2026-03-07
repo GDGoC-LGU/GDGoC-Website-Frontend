@@ -2,12 +2,10 @@ import { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { FiAward, FiTrendingUp } from 'react-icons/fi';
 import { memberOfTheMonth, hallOfFameMembers } from '../data/hallOfFameData';
-import { useTheme } from '../context/ThemeContext';
 
 export default function HallOfFame() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-80px' });
-  const { isDark } = useTheme();
 
   return (
     <section
@@ -18,7 +16,7 @@ export default function HallOfFame() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}  
           style={{ textAlign: 'center', marginBottom: 64 }}
         >
           <h2 style={{

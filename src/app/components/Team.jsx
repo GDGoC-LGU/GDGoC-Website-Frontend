@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { FiLinkedin, FiGithub, FiTwitter } from 'react-icons/fi';
 import { teamData } from '../data/teamData';
-import { useTheme } from '../context/ThemeContext';
 
 export default function Team() {
   const ref = useRef(null);
